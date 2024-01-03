@@ -9,14 +9,14 @@ import jakarta.persistence.Id;
 @Entity
 public class PictureInfo {
     @Id
-@GeneratedValue(strategy = GenerationType.AUTO)
-public Integer picID;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Integer picID;
 
-public String picName;
+    public String picName;
 
-public String picDes;
+    public String picDes;
 
-public String picPath;
+    public String picPath;
 
     public PictureInfo(Integer picID, String picName, String picDes, String picPath) {
         this.picID = picID;

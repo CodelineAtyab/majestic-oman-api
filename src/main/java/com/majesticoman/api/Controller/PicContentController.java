@@ -37,7 +37,4 @@ public class PicContentController {
         picContentService.createNewPic(pictureInfo);
         return ResponseEntity.ok("New Picture Saved");
     }
-
-
-
 }
