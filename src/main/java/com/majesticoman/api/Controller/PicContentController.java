@@ -22,10 +22,8 @@ public class PicContentController {
 
     @Autowired
     public PicInfoRepository picInfoRepository;
-    @GetMapping(path = "/{ID}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<Byte[]> getPicture(){
-
-
         return null;}
 
     @PostMapping
@@ -34,8 +32,7 @@ public class PicContentController {
         File fileDir = new File("C:\\Java_Practices\\majestic-oman-api\\pictures");
         File fileDestinationInDir = new File(fileDir, picName + ".jpg");
         FileUtils.copyInputStreamToFile(file.getInputStream(), fileDestinationInDir);
-
-
+        //below code for save details of picture in database
         PictureInfo pictureInfo = new PictureInfo(0, picName, null, fileDir.getPath());
         picContentService.createNewPic(pictureInfo);
         return ResponseEntity.ok("New Picture Saved");

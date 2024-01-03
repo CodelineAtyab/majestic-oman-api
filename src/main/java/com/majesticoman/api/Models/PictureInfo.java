@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 
 @Entity
 public class PictureInfo {
-
     @Id
 @GeneratedValue(strategy = GenerationType.AUTO)
 public Integer picID;
