@@ -1,9 +1,11 @@
 package com.majesticoman.api.configration;
 
-mport org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,39 +21,48 @@ import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 
-    @Configuration
-    @EnableWebSecurity
-    @EnableMethodSecurity
-    public class SecurityConfigration {
-        @Bean
-        public UserDetailsService userDetailsService(){
-            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-            InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-            manager.createUser(User.withUsername("admin").password(encoder.encode("1234")).roles("ADMIN").build());
-            return manager;
-        }
-        @Bean
-        public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-            return http.getSharedObject(AuthenticationManager.class);
-        }
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfigration {
+  @Value("${admin.password}")
+   private String adminPassword;
 
-        @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
-            registry.requestMatchers(req -> req.getMethod().equalsIgnoreCase("OPTIONS")).permitAll();
+    @Bean
+    public UserDetailsService userDetailsService(){
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("admin").password("{noop}"+adminPassword).roles("ADMIN").build());
+        return manager;
+    }
+    @Bean
+    public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
+        // Set up the AuthenticationManagerBuilder
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 
-            http
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .authorizeRequests((authz) -> authz
-                            .requestMatchers(HttpMethod.GET,"/api/v1/**").permitAll()
-                            .requestMatchers(HttpMethod.POST,"/api/v1/login").permitAll()
-                            .anyRequest().authenticated()
-                    )
-                    .httpBasic(withDefaults())
-                    .cors(withDefaults());
+        // Configure your user details service and password encoder
+        authenticationManagerBuilder.userDetailsService(userDetailsService())
+                .passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
 
-            return http.build();
-        }
+        // Build and return the AuthenticationManager
+        return authenticationManagerBuilder.build();
     }
 
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
+        registry.requestMatchers(req -> req.getMethod().equalsIgnoreCase("OPTIONS")).permitAll();
+
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeRequests((authz) -> authz
+                        .requestMatchers(HttpMethod.GET,"/api/v1/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/login").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(withDefaults())
+                .cors(withDefaults());
+
+        return http.build();
+    }
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthenticationController {
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -26,7 +25,6 @@ public class AuthenticationController {
                             request.getPassword()
                     )
             );
-
             if (authenticate.isAuthenticated()) {
                 return ResponseEntity.ok("Authenticated successfully");
             } else {
