@@ -58,7 +58,7 @@ public class SecurityConfigration {
                 .authorizeRequests((authz) -> authz
                         .requestMatchers(HttpMethod.GET,"/api/v1/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/login").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()//authenticated()
                 )
                 .httpBasic(withDefaults())
                 .cors(withDefaults());
