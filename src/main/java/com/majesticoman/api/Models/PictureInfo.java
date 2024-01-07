@@ -18,14 +18,14 @@ public class PictureInfo {
 
     public String picPath;
 
-    public String picLable;
+    public String picLabel;
 
-    public PictureInfo(Integer picID, String picName, String picDes, String picPath,String picLable) {
+    public PictureInfo(Integer picID, String picName, String picDes, String picPath,String picLabel) {
         this.picID = picID;
         this.picName = picName;
         this.picDes = picDes;
         this.picPath = picPath;
-        this.picLable=picLable;
+        this.picLabel =picLabel;
     }
 
     public  PictureInfo(){}
@@ -62,11 +62,11 @@ public class PictureInfo {
         this.picPath = picPath;
     }
 
-    public String getPicLable() {
-        return picLable;
+    public String getPicLabel() {
+        return picLabel;
     }
 
-    public void setPicLable(String picLable) {
-        this.picLable = picLable;
+    public void setPicLabel(String picLabel) {
+        this.picLabel = picLabel;
     }
 }

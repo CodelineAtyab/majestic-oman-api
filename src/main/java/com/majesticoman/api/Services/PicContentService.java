@@ -141,7 +141,7 @@ public class PicContentService {
 
         existingImage.setPicDes(img.getPicDes());
         existingImage.setPicPath(img.getPicPath());
-        existingImage.setPicLable(img.getPicLable());
+        existingImage.setPicLabel(img.getPicLabel());
         existingImage.setPicName(img.getPicName());
         picInfoRepository.save(existingImage);
     }
