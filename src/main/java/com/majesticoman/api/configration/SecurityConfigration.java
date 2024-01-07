@@ -32,7 +32,7 @@ public class SecurityConfigration {
     public UserDetailsService userDetailsService(){
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("admin").password("{noop}"+adminPassword).roles("ADMIN").build());
+        manager.createUser(User.withUsername("admin").password("{noop}"+adminPassword.toLowerCase()).roles("ADMIN").build());
         return manager;
     }
     @Bean
