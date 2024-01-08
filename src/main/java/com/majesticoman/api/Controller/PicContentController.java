@@ -66,10 +66,10 @@ public class PicContentController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> UploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> UploadImage(@RequestParam("file") MultipartFile file) {
         try {
             PictureInfo uploadedImage = picContentService.uploadImage(file);
-            return ResponseEntity.ok("File uploaded successfully: " + uploadedImage.getPicPath());
+            return ResponseEntity.ok(uploadedImage.getPicID());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
         }
