@@ -1,4 +1,5 @@
 package com.majesticoman.api.Services;
+
 import com.majesticoman.api.Models.PictureInfo;
 import com.majesticoman.api.Repository.PicInfoRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,33 +32,32 @@ public class PicContentService {
     @Autowired
     public PicInfoRepository picInfoRepository;
     private String lastImagePath = null;
-//    public PictureInfo createNewPic(PictureInfo pictureInfo){
-//        picInfoRepository.save(pictureInfo);
-//        return pictureInfo;
-//    }
+
     public PictureInfo uploadImage(MultipartFile file) throws IOException {
         PictureInfo imageInfo = new PictureInfo();
         imageInfo = picInfoRepository.save(imageInfo);
 
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        String newFileName = "image_" + imageInfo.getPicID()+ "." + extension;
-        File destinationFile = new File("./Data/" + newFileName);
+        String newFileName = "image_" + imageInfo.getPicID() + "." + extension;
+        File destinationFile = new File("./data/" + newFileName);
         FileUtils.copyInputStreamToFile(file.getInputStream(), destinationFile);
 
         imageInfo.setPicPath(destinationFile.getPath());
         return picInfoRepository.save(imageInfo);
     }
+
     public File retrieveImageFile(String id) {
         String[] possibleExtensions = {"png", "jpg", "jpeg"};
 
         return Arrays.stream(possibleExtensions)
-                .map(ext -> Paths.get("./Data/image_" + id + "." + ext).toFile())
+                .map(ext -> Paths.get("./data/image_" + id + "." + ext).toFile())
                 .filter(File::exists)
                 .findFirst()
                 .orElse(null);
     }
+
     public File getRandomImage() throws IOException {
-        Path dir = Paths.get("./Data/");
+        Path dir = Paths.get("./data/");
         List<File> imageFiles = new ArrayList<>();
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.{png,jpg,jpeg}")) {
@@ -81,6 +81,7 @@ public class PicContentService {
 
         return selectedFile;
     }
+
     public MediaType getMediaType(File file) {
         MimeTypes mimeTypes = TikaConfig.getDefaultConfig().getMimeRepository();
         try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
@@ -98,13 +99,13 @@ public class PicContentService {
 
 
         Arrays.stream(possibleExtensions)
-                .map(ext -> new File("./Data/image_" + id + "." + ext))
+                .map(ext -> new File("./data/image_" + id + "." + ext))
                 .filter(File::exists)
                 .forEach(File::delete);
 
 
         String newExtension = FilenameUtils.getExtension(file.getOriginalFilename());
-        File destinationFile = new File("./Data/image_" + id + "." + newExtension);
+        File destinationFile = new File("./data/image_" + id + "." + newExtension);
         FileUtils.copyInputStreamToFile(file.getInputStream(), destinationFile);
 
 
@@ -113,7 +114,7 @@ public class PicContentService {
     public void deleteImage(int id) throws IOException {
         String[] possibleExtensions = {"png", "jpg", "jpeg"};
         boolean fileDeleted = Arrays.stream(possibleExtensions)
-                .map(ext -> new File("./Data/image_" + id + "." + ext))
+                .map(ext -> new File("./data/image_" + id + "." + ext))
                 .filter(File::exists)
                 .findFirst()
                 .map(File::delete)
@@ -127,6 +128,7 @@ public class PicContentService {
             }
         }
     }
+
     public List<PictureInfo> getAllImages() {
         return picInfoRepository.findAll();
     }

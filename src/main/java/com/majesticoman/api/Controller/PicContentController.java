@@ -6,7 +6,6 @@ import com.majesticoman.api.Repository.PicInfoRepository;
 import com.majesticoman.api.Services.PicContentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.metadata.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/PicturesContent")
+@RequestMapping("/api/v1/picturesContent")
 public class PicContentController {
 
     @Autowired
@@ -67,10 +66,10 @@ public class PicContentController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> UploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> UploadImage(@RequestParam("file") MultipartFile file) {
         try {
             PictureInfo uploadedImage = picContentService.uploadImage(file);
-            return ResponseEntity.ok("File uploaded successfully: " + uploadedImage.getPicPath());
+            return ResponseEntity.ok(uploadedImage.getPicID());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
         }
@@ -123,6 +122,7 @@ public class PicContentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
     @DeleteMapping("/data/{id}")
     public ResponseEntity<String> deleteImage(@PathVariable int id) {
         try {

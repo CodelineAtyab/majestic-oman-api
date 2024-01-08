@@ -1,4 +1,4 @@
-package com.majesticoman.api.configration;
+package com.majesticoman.api.Configration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,16 +25,17 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfigration {
-  @Value("${admin.password}")
-   private String adminPassword;
+    @Value("${admin.password}")
+    private String adminPassword;
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("admin").password("{noop}"+adminPassword.toLowerCase()).roles("ADMIN").build());
+        manager.createUser(User.withUsername("admin").password("{noop}" + adminPassword.toLowerCase()).roles("ADMIN").build());
         return manager;
     }
+
     @Bean
     public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
         // Set up the AuthenticationManagerBuilder
@@ -56,9 +57,9 @@ public class SecurityConfigration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests((authz) -> authz
-                        .requestMatchers(HttpMethod.GET,"/api/v1/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/v1/login").permitAll()
-                        .anyRequest().permitAll()//authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
                 .cors(withDefaults());
