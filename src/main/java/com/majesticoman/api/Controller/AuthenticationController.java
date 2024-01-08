@@ -28,7 +28,7 @@ public class AuthenticationController {
             if (authenticate.isAuthenticated()) {
                 return ResponseEntity.ok("Authenticated successfully");
             } else {
-                return ResponseEntity.status(401).body("Authentication failed");
+                return ResponseEntity.status(401).body("Authentication failed!!");
             }
         } catch (AuthenticationException e) {
             return ResponseEntity.status(401).body("Authentication failed");

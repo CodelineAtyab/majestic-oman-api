@@ -1,4 +1,4 @@
-package com.majesticoman.api.configration;
+package com.majesticoman.api.Configration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

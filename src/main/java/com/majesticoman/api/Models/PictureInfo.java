@@ -20,15 +20,16 @@ public class PictureInfo {
 
     public String picLabel;
 
-    public PictureInfo(Integer picID, String picName, String picDes, String picPath,String picLabel) {
+    public PictureInfo(Integer picID, String picName, String picDes, String picPath, String picLabel) {
         this.picID = picID;
         this.picName = picName;
         this.picDes = picDes;
         this.picPath = picPath;
-        this.picLabel =picLabel;
+        this.picLabel = picLabel;
     }
 
-    public  PictureInfo(){}
+    public PictureInfo() {
+    }
 
     public Integer getPicID() {
         return picID;
